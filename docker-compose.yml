@@ -1,8 +1,10 @@
 version: '3.8'
+
 services:
   nginx:
     image: nginx:alpine
     container_name: quiz_nginx
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -15,66 +17,79 @@ services:
     depends_on:
       - web
       - phpmyadmin
+
   web:
-    image: php:8.2-apache
+    build:
+      context: ./web
+      dockerfile: Dockerfile
     container_name: quiz_web
-    command: bash -c "docker-php-ext-install mysqli && apache2-foreground"
+    restart: always
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-quiz_db}
+      MYSQL_USER: ${MYSQL_USER:-quiz_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-User@QuizSystem2026!}
     volumes:
-      - ./web:/var/www/html:ro
+      - ./web:/var/www/html
     networks:
       - frontend_net
       - backend_net
     depends_on:
       - db
+
   db:
     image: mysql:8.0
     container_name: quiz_db
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Root@QuizSystem2026!}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-quiz_db}
+      MYSQL_USER: ${MYSQL_USER:-quiz_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-User@QuizSystem2026!}
     volumes:
       - db_data:/var/lib/mysql
       - ./db_init:/docker-entrypoint-initdb.d:ro
     networks:
       - backend_net
+
   phpmyadmin:
     image: phpmyadmin:latest
     container_name: quiz_pma
+    restart: always
     environment:
       PMA_HOST: db
       PMA_USER: root
-      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Root@QuizSystem2026!}
       PMA_ABSOLUTE_URI: https://192.168.31.128/pma/
     networks:
       - frontend_net
       - backend_net
     depends_on:
       - db
+
   prometheus:
     image: prom/prometheus:latest
     container_name: quiz_prometheus
+    restart: always
     ports:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
       - monitor_net
+
   grafana:
     image: grafana/grafana:latest
     container_name: quiz_grafana
+    restart: always
     ports:
       - "3000:3000"
     networks:
       - monitor_net
+
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.47.2
     container_name: quiz_cadvisor
+    restart: always
     ports:
       - "8080:8080"
     volumes:
@@ -84,25 +99,31 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     networks:
       - monitor_net
+
   node-exporter:
     image: prom/node-exporter:latest
     container_name: quiz_node_exporter
+    restart: always
     ports:
       - "9100:9100"
     networks:
       - monitor_net
+
   loki:
     image: grafana/loki:2.9.2
     container_name: quiz_loki
+    restart: always
     ports:
       - "3100:3100"
     volumes:
       - ./loki/loki-config.yml:/etc/loki/local-config.yaml:ro
     networks:
       - monitor_net
+
   promtail:
     image: grafana/promtail:2.9.2
     container_name: quiz_promtail
+    restart: always
     volumes:
       - ./promtail/promtail-config.yml:/etc/promtail/config.yml:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
@@ -111,6 +132,7 @@ services:
       - monitor_net
     depends_on:
       - loki
+
 networks:
   frontend_net:
     driver: bridge
@@ -118,5 +140,6 @@ networks:
     driver: bridge
   monitor_net:
     driver: bridge
+
 volumes:
   db_data:

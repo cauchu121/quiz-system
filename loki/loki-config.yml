@@ -1,7 +1,11 @@
 auth_enabled: false
+
 server:
   http_listen_port: 3100
+  grpc_listen_port: 9096
+
 common:
+  instance_addr: 127.0.0.1
   path_prefix: /tmp/loki
   storage:
     filesystem:
@@ -11,6 +15,7 @@ common:
   ring:
     kvstore:
       store: inmemory
+
 schema_config:
   configs:
     - from: 2020-10-24
@@ -20,3 +25,6 @@ schema_config:
       index:
         prefix: index_
         period: 24h
+
+analytics:
+  reporting_enabled: false
