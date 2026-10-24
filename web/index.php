@@ -122,30 +122,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $total > 0) {
             opacity: 0.9;
             transform: translateY(-1px);
         }
-        .system-tags {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-        .sys-tag {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            color: var(--text-muted);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-        .dot.green { background: #10b981; box-shadow: 0 0 8px #10b981; }
-        .dot.blue { background: #38bdf8; box-shadow: 0 0 8px #38bdf8; }
         .score-banner {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(56, 189, 248, 0.15) 100%);
             border: 1px solid rgba(16, 185, 129, 0.3);
@@ -269,26 +245,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $total > 0) {
         </div>
     </div>
 
-    <!-- System Status Badges -->
-    <div class="system-tags">
-        <div class="sys-tag">
-            <span class="dot <?= $db_connected ? 'green' : 'red' ?>"></span>
-            MySQL: <?= $db_connected ? 'Đã kết nối (quiz_db)' : 'Lỗi kết nối' ?>
-        </div>
-        <div class="sys-tag">
-            <span class="dot blue"></span>
-            Nginx Reverse Proxy: SSL 443 (HTTPS)
-        </div>
-        <div class="sys-tag">
-            <span class="dot green"></span>
-            Loki & Promtail: LogQL Active
-        </div>
-        <div class="sys-tag">
-            <span class="dot green"></span>
-            Prometheus & Grafana: Port 3000 / 9090
-        </div>
-    </div>
-
     <!-- Kết quả chấm điểm tự động -->
     <?php if ($score !== null): 
         $calc_score = $total > 0 ? round(($score / $total) * 10, 2) : 0;
@@ -316,11 +272,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $total > 0) {
                 $qid = $q['id'];
                 $user_choice = $user_answers[$qid] ?? null;
                 $correct = strtoupper($q['correct_option']);
+                $clean_q_text = preg_replace('/^Câu\s*\d+\s*:\s*/ui', '', $q['question_text']);
             ?>
                 <div class="question-card">
                     <div class="question-title">
                         <span class="q-number">Câu <?= $index + 1 ?>:</span>
-                        <span><?= htmlspecialchars($q['question_text']) ?></span>
+                        <span><?= htmlspecialchars($clean_q_text) ?></span>
                     </div>
 
                     <?php 
