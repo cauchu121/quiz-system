@@ -170,6 +170,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $total > 0) {
         .q-number {
             color: var(--primary);
             font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .option-label {
             display: flex;
@@ -236,9 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $total > 0) {
     <!-- Header -->
     <div class="header-card">
         <div class="header-left">
-            <span class="badge-topic">Đề tài 35 • Triển khai & Quản trị Hệ thống</span>
-            <h1>Hệ Thống Thi Trắc Nghiệm Trực Tuyến (Quiz System)</h1>
-            <p class="student-info">Sinh viên: <strong>Lê Đắc Lộc</strong> | MSV: <strong>DTC245180150</strong> | Lớp: <strong>KTPM K23C</strong></p>
+            <h1 style="font-size: 22px; font-weight: 700; color: #ffffff;">Hệ Thống Thi Trắc Nghiệm Trực Tuyến (Quiz System)</h1>
         </div>
         <div>
             <a href="/admin.php" class="nav-btn">Quản Trị Đề Thi →</a>
@@ -272,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $total > 0) {
                 $qid = $q['id'];
                 $user_choice = $user_answers[$qid] ?? null;
                 $correct = strtoupper($q['correct_option']);
-                $clean_q_text = preg_replace('/^Câu\s*\d+\s*:\s*/ui', '', $q['question_text']);
+                $clean_q_text = preg_replace('/^Câu\s*\d+[\s\.\:\-]+/ui', '', $q['question_text']);
             ?>
                 <div class="question-card">
                     <div class="question-title">
