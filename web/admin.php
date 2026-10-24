@@ -249,7 +249,6 @@ if ($db_connected) {
                 <div class="form-group">
                     <label>Mật khẩu</label>
                     <input type="password" name="pass" placeholder="••••••••" required>
-                    <small style="color: var(--text-muted); font-size: 11px; margin-top: 4px; display:block;">Mặc định: <strong>admin123</strong></small>
                 </div>
                 <button type="submit" name="login" class="btn btn-success" style="width: 100%; justify-content: center; margin-top: 10px;">Đăng Nhập Vào Hệ Thống</button>
             </form>
