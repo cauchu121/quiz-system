@@ -217,7 +217,6 @@ if ($db_connected) {
     <div class="header-card">
         <div>
             <h1 style="font-size: 20px; font-weight: 700;">Quản Trị Đề Thi (Admin CRUD)</h1>
-            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Đề tài 35: Hệ thống Quiz • Sinh viên: <strong>Lê Đắc Lộc</strong></p>
         </div>
         <div class="nav-links">
             <a href="/" class="btn btn-outline">← Xem Trang Thi</a>
