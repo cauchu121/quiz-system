@@ -222,7 +222,6 @@ if ($db_connected) {
         <div class="nav-links">
             <a href="/" class="btn btn-outline">← Xem Trang Thi</a>
             <?php if ($is_admin): ?>
-                <a href="/pma/" target="_blank" class="btn btn-outline">phpMyAdmin</a>
                 <a href="?logout=1" class="btn btn-danger">Đăng xuất</a>
             <?php endif; ?>
         </div>
